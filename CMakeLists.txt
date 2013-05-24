@@ -16,6 +16,11 @@ set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${QTCURVE_VERSION_FULL
 set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${QTCURVE_VERSION_FULL}")
 include(CPack)
 
+# Comment the kde3/kde4 prefix detection as a whole as it wants to run
+# kde-config and kde4-config, which in turn can create stuff in ~/.kde.
+# This cannot work on read-only homes.
+# So, the "fallback" prefixes ("/usr" for both) will be used.
+if (BRAINDEAD_DETECTION)
 set(OLD_CMAKE_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
 
 # Try to find kde4-config...
@@ -50,6 +55,7 @@ if (KDE4_KDECONFIG_EXECUTABLE)
                     ARGS --prefix
                     OUTPUT_VARIABLE KDE4PREFIX)
 endif (KDE4_KDECONFIG_EXECUTABLE)
+endif (BRAINDEAD_DETECTION)
 
 if(NOT KDE3PREFIX)
     if(KDE4PREFIX)
